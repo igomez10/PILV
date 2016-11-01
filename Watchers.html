@@ -10,7 +10,8 @@
 
 	<body bgcolor="gray" align='center'>
 		<div id="app">
-			<h1>{{ message | capitalize }}</h1>
+			<div align='left'> <a href='index.html'>Volver</a></div>
+			<div><h1>{{ message | capitalize }}</h1></div>
 			<hr>
 			<li v-for='elemento in lista' v-if='booleano'>{{elemento}}</li>
 			<input placeholder='pregunta' v-model='pregunta'></input>
@@ -27,7 +28,7 @@
 			booleano: false,
 			lista:[1,2,3,4,5,6],
 			pregunta:'',
-			respuesta:'Tienes que preguntar algo para que te dé una respuesta',
+			respuesta:'Tienes que preguntar algo para que te entregue una respuesta',
 			imagen:''
 		},
 		watch:{

@@ -7,10 +7,15 @@
 	</head>
 
 	<body align='center'>
+	
 		<div id="app">
-			<h1>{{ message | capitalize }}</h1>
+			<div>
+			<div align='left'><a href='index.html'>Volver</a></div>
+			<h1 align='center'>{{ message | capitalize }}</h1>
+			
+			<div>
 			<hr>
-			<button v-on:click='mostrar' v>➤</button>
+			<button v-on:click='mostrar'>➤</button>
 			<li v-for='elemento in lista' v-if='booleano'>{{elemento}}</li>
 		</div> 
 		
