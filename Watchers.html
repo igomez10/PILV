@@ -5,67 +5,86 @@
 			<script src='https://unpkg.com/lodash'></script>
 			<script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+			<script id='watchers-template' type='text/x-template'>
+				<div>
+				<div align='left'> 
+					<a href='index.html'>Volver</a>
+				</div>
+				<div>
+					<h1>{{ message | capitalize }}</h1>
+				</div>
+				<hr>
+				<li v-for='elemento in lista' v-if='booleano'>{{elemento}}</li>
+				<input placeholder='pregunta' v-model='pregunta'>
+				<p>{{respuesta}}</p>
+				<hr>
+				<img v-bind:src="imagen">
+				<div>
+			</script>
+			<script>
+			Vue.component('elcomponente',{
+						template:'#watchers-template',
+						props: 
+						{
+							message: {default:'Watchers!'},
+							booleano:{default: false},
+							lista:{default: function () { return [1,2,3,4,5,6]}},
+							pregunta:{default:''},
+							respuesta:{default:'Tienes que preguntar algo para que te entregue una respuesta'},
+							imagen:{default:''}
+						},
+						watch:
+						{
+							pregunta:function (nuevaPregunta) 
+							{
+								this.respuesta='Recibiendo pregunta, deja de escribir';
+								this.darRespuesta()
+							}
+						},
+						filters:
+						{
+							capitalize:function (palabra) 
+							{
+								return palabra.toUpperCase();
+							}
+						},
+						methods:
+						{
+							mostrar: function() 
+							{
+								this.booleano=!this.booleano;
+								return true;
+							},
+							darRespuesta: _.debounce(
+								function()
+								{
+								var vm=this
+								if(this.pregunta.indexOf('?')===-1){
+									vm.respuesta='tiene que contener un ?';
+									return
+								}
+								vm.respuesta='Pensando';
+				 				axios.get('https://yesno.wtf/api')
+									.then(function(response){
+										vm.respuesta=_.capitalize(response.data.answer);
+										vm.imagen=response.data.image;
+									})
+									.catch(function(error){
+										vm.respuesta='Algo salió mal y no pude contactar el api'+ error;
+									})
+								},500)
+						}
+			})
+			</script>
 	</head>
 
-	<body bgcolor="gray" align='center'>
+	<body align='center'>
 		<div id="app">
-			<div align='left'> <a href='index.html'>Volver</a></div>
-			<div><h1>{{ message | capitalize }}</h1></div>
-			<hr>
-			<li v-for='elemento in lista' v-if='booleano'>{{elemento}}</li>
-			<input placeholder='pregunta' v-model='pregunta'></input>
-			<p>{{respuesta}}</p>
-			<hr>
-			<img v-bind:src="imagen">
+				<elcomponente></elcomponente>
 		</div>
 
 	<script>
-	 var aplicacion=new Vue({
-		el: '#app',
-		data: {
-			message: 'Watchers!',
-			booleano: false,
-			lista:[1,2,3,4,5,6],
-			pregunta:'',
-			respuesta:'Tienes que preguntar algo para que te entregue una respuesta',
-			imagen:''
-		},
-		watch:{
-			pregunta:function (nuevaPregunta) {
-				this.respuesta='Recibiendo pregunta, deja de escribir';
-				this.darRespuesta()
-			}
-		},
-		filters:{
-			capitalize:function (palabra) {
-				return palabra.toUpperCase();
-			}
-		},
-		methods:{
-			mostrar: function() {
-				this.booleano=!this.booleano;
-				return true;
-			},
-			darRespuesta: _.debounce(
-				function(){
-				var vm=this
-				if(this.pregunta.indexOf('?')===-1){
-					vm.respuesta='tiene que contener un ?';
-					return
-				}
-				vm.respuesta='Pensando';
- 				axios.get('https://yesno.wtf/api')
-					.then(function(response){
-						vm.respuesta=_.capitalize(response.data.answer);
-						vm.imagen=response.data.image;
-					})
-					.catch(function(error){
-						vm.respuesta='Algo salió mal y no pude contactar el api'+ error;
-					})
-			},500)
-		}
-		})
+	 new Vue({el: '#app'})
 	</script>
 	</body>
 

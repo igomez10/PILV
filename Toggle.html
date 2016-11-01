@@ -1,43 +1,55 @@
 <HTML>
 
 	<head>
+			<meta charset="UTF-8">
 			<script src='https://unpkg.com/vue@next/dist/vue.js'></script>
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+			<script id='toggle-template' type='text/x-template'>
+				<div>
+					<div>
+						<div align='left'>
+							<a href='index.html'>Volver</a>
+						</div>
+						<h1 align='center'>{{ message | capitalize }}</h1>
+					</div>
+					<hr>
+					<button v-on:click='mostrar'>➤</button>
+					<li v-for='elemento in lista' v-if='booleano'>{{elemento}}</li>
+
+				</div>
+			</script>
+			<script>
+				Vue.component('elcomponente', {
+					template:'#toggle-template',
+					props: {
+						message: {default:'	Toggle!'},
+						booleano:{default: false},
+						lista:{default: function(){return [1,2,3,4,5,6]}}
+					},
+					filters:{
+						capitalize:function (palabra) {
+							return palabra.toUpperCase()
+						}
+					},
+					methods:{
+						mostrar:function() {
+							this.booleano=!this.booleano;
+						}
+					}
+
+				})
+			</script>
 
 	</head>
 
 	<body align='center'>
 	
 		<div id="app">
-			<div>
-			<div align='left'><a href='index.html'>Volver</a></div>
-			<h1 align='center'>{{ message | capitalize }}</h1>
-			
-			<div>
-			<hr>
-			<button v-on:click='mostrar'>➤</button>
-			<li v-for='elemento in lista' v-if='booleano'>{{elemento}}</li>
+			<elcomponente></elcomponente>
 		</div> 
 		
 	<script>
-	 new Vue({
-		el: '#app',
-		data: {
-			message: '	Toggle!',
-			booleano: false,
-			lista:[1,2,3,4,5,6]
-		},
-		filters:{
-			capitalize:function (palabra) {
-				return palabra.toUpperCase()
-			}
-		},
-		methods:{
-			mostrar:function() {
-				this.booleano=!this.booleano;
-			}
-		}
-		})
+	 new Vue({el: '#app'})
 	</script>
 	</body>
 

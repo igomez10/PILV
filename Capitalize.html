@@ -3,50 +3,74 @@
   <head>
       <script src='https://unpkg.com/vue@next/dist/vue.js'></script>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-      <script src='https://unpkg.com/lodash'></script>
-
+      <script src='https://unpkg.com/lodash'></script>      
+      <script id='capitalizer-template' type='text/x-template'>
+          <div id="app">
+            <div align='left'>
+              <a align='left' href="index.html">Volver</a>
+            </div>
+            <div>
+              <h1>{{ message | capitalize }}</h1>
+              {{minuscula | capitalize }}
+            </div>
+            <hr> 
+            <div>
+              <input type='text' v-model="minuscula">
+            </div>
+          </div>
+      </script>
+      
+      <script>
+          Vue.component('elcomponente', 
+          {
+              //props:['message','minuscula'],
+              props: {
+                message: {
+                  default: "Hello"
+                },
+                minuscula: {
+                  default: "Aloha"
+                }
+              },
+              
+              template:'#capitalizer-template',
+              filters:
+                {
+                  capitalize:function (palabra) 
+                    {
+                      return palabra.toUpperCase()
+                    }
+                },
+              watch:
+                {
+                  message:function (nuevaPregunta) 
+                    {
+                      this.message='Recibiendo pregunta, deja de escribir';
+                      this.darRespuesta()
+                    }
+                },
+              methods:
+                {
+                  actualizar: _.debounce(function(nueva) 
+                    {
+                      var app=this;
+                      app.mensaje=nueva
+                    },500)
+                }
+          });
+      </script>
+      
   </head>
-
+  
   <body align='center'>
-    <div id="app">
-      <div align='left'>
-      <a align='left' href="index.html">Volver</a>
-      </div>
-      <div>
-      <h1>{{ message | capitalize }}</h1>
-      </div>
-    </div>
-    <hr> 
-    <div>
-      <input type=text v-model='minuscula'></input>
-    </div>
+        
+    <div id='app'>
+      <elcomponente minuscula="sin cambiar"></elcomponente>
+    </div>            
+    
     
   <script>
-   var aplicacion=new Vue({
-    el: '#app',
-    data: {
-      message: 'Hello Vue.js!',
-    },
-    filters:{
-      capitalize:function (palabra) {
-        return palabra.toUpperCase()
-      }
-    },
-    watch:{
-      message:function (nuevaPregunta) {
-        this.message='Recibiendo pregunta, deja de escribir';
-        this.darRespuesta()
-      }
-    },
-    methods:{
-      actualizar: _.debounce(function(nueva) {
-        var app=this;
-        app.mensaje=nueva
-      },500)
-    }
-    })
+      new Vue({ el: '#app' });
   </script>
   </body>
-
-  
 </HTML>
